@@ -1,6 +1,6 @@
 # Registrar
 
-TODO: Write a gem description
+Registrar standardizes Authentication Responses through Rack Middleware and works well with common authentication mechanisms like OmniAuth.
 
 ## Installation
 
