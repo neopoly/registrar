@@ -13,14 +13,14 @@ module Registrar
       private
 
       def try_to_normalize_auth(env)
-        if env["omniauth.auth"]
-          env['registrar.auth'] = AuthNormalizer.normalized(env)
+        if auth = env['omniauth.auth']
+          env['registrar.auth'] = AuthNormalizer.normalized(auth)
         end
       end
 
       class AuthNormalizer
-        def self.normalized(env)
-          normalizer = new(env)
+        def self.normalized(auth)
+          normalizer = new(auth)
           normalizer.send(:normalize)
           normalizer.send(:normalized)
         end
@@ -29,8 +29,8 @@ module Registrar
 
         attr_reader :auth, :normalized
 
-        def initialize(env)
-          @auth = env["omniauth.auth"]
+        def initialize(auth)
+          @auth = auth
           @normalized = {}
         end
 
