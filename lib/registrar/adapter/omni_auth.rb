@@ -20,45 +20,33 @@ module Registrar
 
       class AuthNormalizer
         def self.normalized(auth)
-          normalizer = new(auth)
-          normalizer.send(:normalize)
-          normalizer.send(:normalized)
+          new(auth).normalize
+        end
+
+        def initialize(auth)
+          @auth = auth
+        end
+
+        def normalize
+          normalized = {}
+          normalized['provider'] = normalize_provider
+          normalized['profile'] = normalize_profile
+          normalized
         end
 
         private
 
-        attr_reader :auth, :normalized
-
-        def initialize(auth)
-          @auth = auth
-          @normalized = {}
-        end
-
-        def normalize
-          normalize_provider
-          normalize_profile
-        end
+        attr_reader :auth
 
         def normalize_provider
-          provider_name = auth["provider"]
-          provider_uid = auth["uid"]
-
-          normalized.merge!(
-            'provider' => {
-              'name' => provider_name,
-              'uid' => provider_uid
-            }
-          )
+          {
+            'name' => auth['provider'],
+            'uid' => auth['uid']
+          }
         end
 
         def normalize_profile
-          normalized.merge!(
-            'profile' => {}
-          )
-
-          auth["info"].to_hash.each_pair do |k, v|
-            normalized['profile'][k] = v
-          end
+          auth['info'].to_hash
         end
       end
     end
