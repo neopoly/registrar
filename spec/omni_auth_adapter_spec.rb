@@ -18,7 +18,8 @@ class OmniAuthAdapterSpec < Spec
     assert_equal(
       {
         'name' => 'facebook',
-        'uid' => '100000100277322'
+        'uid' => '100000100277322',
+        'access_token' => 'CAACEdEose0cBAGxad8Y14t3tu3kMlA3SgnxZBfZCQcSyb9hnn1kNZCpBDzZBIpNNpYSsJTFDs4Ar4ZBZBoMRRAzzFJGhPW4mtM1Rmm62BsQiZCkpJpG1pAC8tslbD3s3BiSYEGdjhOZBt7QVHZB1Sea14ojiZAOZBhFWi1BZBfIGgRI3El6FmEYMKPQ2XgJR0ottKdTQBR1ia2NuZABxpsAMYY8Sb'
       }, env['registrar.auth']['provider'])
   end
 
