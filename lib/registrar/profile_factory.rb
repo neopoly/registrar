@@ -1,18 +1,18 @@
 module Registrar
-  class ProfileBuilder
+  class ProfileFactory
     def initialize(app, callable)
       @app = app
       @callable = callable
     end
 
     def call(env)
-      try_to_call(env)
+      build_profile(env)
       @app.call(env)
     end
 
     private
 
-    def try_to_call(env)
+    def build_profile(env)
       if auth_hash = env['registrar.auth']
         profile = @callable.call(auth_hash)
         env['registrar.profile'] = profile.to_hash
