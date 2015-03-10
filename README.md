@@ -2,6 +2,7 @@
 [doc]: http://rubydoc.info/github/JanOwiesniak/registrar/master/file/README.md
 [gem]: https://rubygems.org/gems/registrar
 [gem-badge]: https://img.shields.io/gem/v/registrar.svg
+[rack-playground]: https://github.com/JanOwiesniak/rack-playground/blob/master/lib/app_builder.rb
 
 # Registrar
 
@@ -33,7 +34,22 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Click [here][rack-playground] to see how to use the different components.
+
+## Short summary of the components
+
+### Gatekeeper
+
+It normalizes the interface.
+
+## Adapter
+
+It normalizes the response.
+
+## ProfileFactory
+
+It passes the normalized response to a profile factory and stores a hash version
+of the returned object in the env.
 
 ## Contributing
 
