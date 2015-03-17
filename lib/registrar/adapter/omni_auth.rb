@@ -40,10 +40,22 @@ module Registrar
 
         def normalize_provider
           {
-            'name' => auth['provider'],
-            'uid' => auth['uid'],
-            'access_token' => auth['credentials']['token']
+            'name' => provider_name,
+            'uid' => provider_uid,
+            'access_token' => access_token 
           }
+        end
+
+        def provider_name
+          auth['provider']
+        end
+
+        def provider_uid
+          auth['uid']
+        end
+
+        def access_token
+          auth['credentials']['token']
         end
 
         def normalize_profile
