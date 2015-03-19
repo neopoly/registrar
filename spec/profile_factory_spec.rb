@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 class ProfileFactorySpec < Spec
-  it 'passes auth hash to callable and stores callable#to_hash in the env' do
+  it 'passes auth hash to callable and stores return value in the env' do
     get '/'
     assert_stores_profile env
   end
@@ -9,13 +9,12 @@ class ProfileFactorySpec < Spec
   private
 
   def assert_stores_profile(env)
-    assert_equal(
-      {
-        'internal_uid' => '1',
-        'external_uid' => 'facebook_123',
-        'name' => 'Bob'
-      },
-      env['registrar.profile'])
+    profile = env['registrar.profile']
+
+    assert_kind_of ProfileGatewayStub::Profile, profile
+    assert_equal '1', profile.internal_uid
+    assert_equal 'facebook_123', profile.external_uid
+    assert_equal 'Bob', profile.name
   end
 
   def env
@@ -78,6 +77,8 @@ class ProfileFactorySpec < Spec
     end
 
     class Profile
+      attr_reader :internal_uid, :external_uid, :name
+
       def initialize(auth_hash)
         provider_name = auth_hash['provider']['name']
         uid = auth_hash['provider']['uid']
@@ -85,14 +86,6 @@ class ProfileFactorySpec < Spec
         @internal_uid = '1'
         @external_uid = "#{provider_name}_#{uid}"
         @name = auth_hash['profile']['name']
-      end
-
-      def to_hash
-        {
-          'internal_uid' => @internal_uid,
-          'external_uid' => @external_uid,
-          'name' => @name
-        }
       end
     end
   end

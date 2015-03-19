@@ -15,7 +15,7 @@ module Registrar
     def build_profile(env)
       if auth_hash = env['registrar.auth']
         profile = @callable.call(auth_hash)
-        env['registrar.profile'] = profile.to_hash
+        env['registrar.profile'] = profile
       end
     end
   end

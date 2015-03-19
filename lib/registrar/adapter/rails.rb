@@ -1,5 +1,17 @@
 module Registrar
-  class Profile < OpenStruct
+  class Profile < Delegator
+    def initialize(obj)
+      super
+      @delegate_sd_obj = obj
+    end
+
+    def __getobj__
+      @delegate_sd_obj
+    end
+
+    def __setobj__(obj)
+      @delegate_sd_obj = obj
+    end
   end
 
   module Adapter
