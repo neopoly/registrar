@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'omniauth'
 
-class OmniAuthAdapterSpec < Spec
+class OmniAuthAuthBuilderSpec < Spec
   it 'normalizes OmniAuth Auth Hash Schema 1.0 and later' do
     get '/'
     assert_normalizes_auth env
@@ -86,7 +86,7 @@ class OmniAuthAdapterSpec < Spec
     Rack::Builder.new do
       use OmniAuthFacebookStub
 
-      use Registrar::Adapter::OmniAuth
+      use Registrar::AuthBuilder::OmniAuth
 
       app = Proc.new do |env|
         ['200', {'Content-Type' => 'text/html'}, ['A barebones rack app.']]

@@ -1,5 +1,5 @@
 module Registrar
-  module Adapter
+  module AuthBuilder
     class OmniAuth
       def initialize(app)
         @app = app
