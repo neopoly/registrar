@@ -7,34 +7,42 @@ module Registrar
       end
 
       def call(env)
-        build_registrar_params(env)
-        overwrite_params(env)
+        builder = Builder.new(env, @mapping)
+        builder.build_registrar_params
+        builder.overwrite_params
 
         @app.call(env)
       end
 
       private
 
-      def build_registrar_params(env)
-        @mapping.each do |tupel, attribute|
-          value = request(env).params[attribute]
-          namespace, attr = tupel.split('#')
-          params(env)[namespace][attr] = value
+      class Builder
+        def initialize(env, mapping)
+          @env = env
+          @mapping = mapping
         end
-      end
 
-      def overwrite_params(env)
-        params(env).each do |namespace, values|
-          request(env).update_param(namespace, values)
+        def build_registrar_params
+          @mapping.each do |tupel, attribute|
+            value = request.params[attribute]
+            namespace, attr = tupel.split('#')
+            params[namespace][attr] = value
+          end
         end
-      end
 
-      def request(env)
-        @request ||= Rack::Request.new(env)
-      end
+        def overwrite_params
+          params.each do |namespace, values|
+            request.update_param(namespace, values)
+          end
+        end
 
-      def params(env)
-        @params ||= env['registrar.params'] = Hash.new {|h,k| h[k] = {}}
+        def request
+          @request ||= Rack::Request.new(@env)
+        end
+
+        def params
+          @params ||= @env['registrar.params'] = Hash.new {|h,k| h[k] = {}}
+        end
       end
     end
   end
