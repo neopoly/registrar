@@ -54,7 +54,7 @@ module Registrar
         end
 
         def params
-          @params ||= @env['registrar.params'] = Hash.new {|h,k| h[k] = {}}
+          @params ||= Hash.new {|h,k| h[k] = {}}
         end
       end
     end

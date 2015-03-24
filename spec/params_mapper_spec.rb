@@ -2,11 +2,6 @@ require 'spec_helper'
 require 'omniauth'
 
 class ParamsMapperSpec < Spec
-  it 'stores normalized params in registrar.params' do
-    get '/'
-    assert_normalizes_params env['registrar.params']
-  end
-
   it 'normalizes params to registrar schema' do
     get '/'
     assert_normalizes_params Rack::Request.new(env).params
