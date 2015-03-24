@@ -9,7 +9,6 @@ module Registrar
       def call(env)
         builder = Builder.new(env, @mapping)
         builder.build_registrar_params
-        builder.delete_params
         builder.define_params
 
         @app.call(env)
@@ -41,12 +40,6 @@ module Registrar
                 params[namespace_to] = value
               end
             end
-          end
-        end
-
-        def delete_params
-          request.params.each do |key, _|
-            request.delete_param(key)
           end
         end
 

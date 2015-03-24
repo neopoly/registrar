@@ -15,18 +15,10 @@ class ParamsAdapterSpec < Spec
   private
 
   def assert_normalizes_params(params)
-    assert_equal(
-      {
-        'uid' => '1',
-        'provider' => {
-          'name' => 'facebook'
-        },
-        'contact' => 'jan@featurefabrik.de',
-        'info' => {
-          'location' => '221b Baker Street'
-        }
-      }, params
-    )
+    assert_equal '1', params['uid']
+    assert_equal 'facebook', params['provider']['name']
+    assert_equal 'jan@featurefabrik.de', params['contact']
+    assert_equal '221b Baker Street', params['info']['location']
   end
 
   def env
