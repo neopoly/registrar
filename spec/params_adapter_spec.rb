@@ -71,10 +71,10 @@ class ParamsAdapterSpec < Spec
       use ParamsStub
 
       use Registrar::Adapter::Params, {
-        "provider#name" => 'provider',
-        "provider#uid" => 'external_uid',
-        "profile#name" => 'display_name',
-        "profile#email" => 'email'
+        "provider" => "provider#name",
+        "external_uid" => "provider#uid",
+        "display_name" => "profile#name",
+        "email" => "profile#email"
       }
 
       app = Proc.new do |env|

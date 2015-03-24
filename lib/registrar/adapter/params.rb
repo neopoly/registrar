@@ -23,7 +23,7 @@ module Registrar
         end
 
         def build_registrar_params
-          @mapping.each do |tupel, attribute|
+          @mapping.each do |attribute, tupel|
             value = request.params[attribute]
             namespace, attr = tupel.split('#')
             params[namespace][attr] = value
