@@ -7,11 +7,23 @@ module Registrar
       end
 
       def call(env)
-        request = Rack::Request.new(env)
-        @mapping.each do |key, value|
-          request.update_param(value.to_s, request.params[key])
+        @mapping.each do |tupel, attribute|
+          value = request(env).params[attribute]
+          namespace, attr = tupel.split('#')
+          params(env)[namespace][attr] = value
         end
+
         @app.call(env)
+      end
+
+      private
+
+      def request(env)
+        @request ||= Rack::Request.new(env)
+      end
+
+      def params(env)
+        @params ||= env['registrar.params'] = Hash.new {|h,k| h[k] = {}}
       end
     end
   end
