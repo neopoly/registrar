@@ -1,5 +1,5 @@
 module Registrar
-  module Adapter
+  module Mapper
     class Params
       def initialize(app, mapping)
         @app = app

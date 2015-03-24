@@ -1,8 +1,8 @@
-require 'registrar/adapter/params'
+require 'registrar/mapper/params'
 
 module Registrar
   module Mapper
-    class OmniAuth < Adapter::Params
+    class OmniAuth < Params
       def initialize(app)
         super(app, mapping)
       end

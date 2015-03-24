@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'omniauth'
 
-class ParamsAdapterSpec < Spec
+class ParamsMapperSpec < Spec
   it 'stores normalized params in registrar.params' do
     get '/'
     assert_normalizes_params env['registrar.params']
@@ -59,7 +59,7 @@ class ParamsAdapterSpec < Spec
     Rack::Builder.new do
       use ParamsStub
 
-      use Registrar::Adapter::Params, {
+      use Registrar::Mapper::Params, {
         "id" => "uid",
         "provider" => "provider#name",
         "info#email" => "contact",
