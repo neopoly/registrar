@@ -1,5 +1,5 @@
 module Registrar
-  class ProfileFactory
+  class ProfileBuilder
     def initialize(app, callable)
       @app = app
       @callable = callable

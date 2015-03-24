@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-class ProfileFactorySpec < Spec
-  it 'passes auth hash to callable and stores return value in the env' do
+class ProfileBuilderSpec < Spec
+  it 'passes registrar auth hash to callable and stores return value in the env' do
     get '/'
     assert_stores_profile env
   end
@@ -94,7 +94,7 @@ class ProfileFactorySpec < Spec
     Rack::Builder.new do
       use RegistrarAuthStub
 
-      use Registrar::ProfileFactory, ProfileGatewayStub.new
+      use Registrar::ProfileBuilder, ProfileGatewayStub.new
 
       app = Proc.new do |env|
         ['200', {'Content-Type' => 'text/html'}, ['A barebones rack app.']]
