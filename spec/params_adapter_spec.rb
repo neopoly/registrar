@@ -15,24 +15,18 @@ class ParamsAdapterSpec < Spec
   private
 
   def assert_normalizes_params(params)
-    assert_normalizes_provider(params)
-    assert_normalizes_profile(params)
-  end
-
-  def assert_normalizes_provider(params)
     assert_equal(
       {
-        'name' => 'facebook',
-        'uid' => '100000100277322',
-      }, params['provider'])
-  end
-
-  def assert_normalizes_profile(params)
-    assert_equal(
-      {
-        "name" => "Jan Ow",
-        "email" => "jan@featurefabrik.de",
-      }, params['profile'])
+        'uid' => '1',
+        'provider' => {
+          'name' => 'facebook'
+        },
+        'contact' => 'jan@featurefabrik.de',
+        'info' => {
+          'location' => '221b Baker Street'
+        }
+      }, params
+    )
   end
 
   def env
@@ -58,10 +52,13 @@ class ParamsAdapterSpec < Spec
 
     def call(env)
       request = Rack::Request.new(env)
+      request.update_param('id', '1')
       request.update_param('provider', 'facebook')
-      request.update_param('external_uid', '100000100277322')
-      request.update_param('display_name', 'Jan Ow')
-      request.update_param('email', 'jan@featurefabrik.de')
+      request.update_param('info', {
+        'email' => 'jan@featurefabrik.de',
+        'address' => '221b Baker Street'
+        }
+      )
       @app.call(env)
     end
   end
@@ -71,10 +68,10 @@ class ParamsAdapterSpec < Spec
       use ParamsStub
 
       use Registrar::Adapter::Params, {
+        "id" => "uid",
         "provider" => "provider#name",
-        "external_uid" => "provider#uid",
-        "display_name" => "profile#name",
-        "email" => "profile#email"
+        "info#email" => "contact",
+        "info#address" => "info#location"
       }
 
       app = Proc.new do |env|
