@@ -1,5 +1,4 @@
 require 'omniauth'
-require 'omniauth-registrar'
 
 module Registrar
   module Middleware
@@ -36,6 +35,7 @@ module Registrar
     end
 
     def self.add_omniauth_strategy(strategy)
+      require "omniauth-#{strategy}"
       config.middleware.use ::OmniAuth::Builder do
         provider strategy
       end
