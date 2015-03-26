@@ -54,8 +54,8 @@ module Registrar
     end
 
     class Config
-      def strategies(arg = nil)
-        @strategies ||= arg
+      def strategies(*args)
+        @strategies ||= args
       end
 
       def attributes(arg = nil)
