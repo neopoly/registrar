@@ -70,6 +70,5 @@ module Registrar
         @middleware ||= arg
       end
     end
-
   end
 end
