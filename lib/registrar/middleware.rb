@@ -24,9 +24,20 @@ module Registrar
     end
 
     def self.add_omniauth_strategies
-      name = config.name
+      strategies = config.strategies
+
+      if strategies.respond_to?(:each)
+        strategies.each do |strategy|
+          add_omniauth_strategy(strategy)
+        end
+      else
+        add_omniauth_strategy(strategies)
+      end
+    end
+
+    def self.add_omniauth_strategy(strategy)
       config.middleware.use ::OmniAuth::Builder do
-        provider name
+        provider strategy
       end
     end
 
@@ -43,8 +54,8 @@ module Registrar
     end
 
     class Config
-      def name(arg = nil)
-        @name ||= arg
+      def strategies(arg = nil)
+        @strategies ||= arg
       end
 
       def attributes(arg = nil)
