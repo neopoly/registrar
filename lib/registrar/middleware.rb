@@ -35,9 +35,13 @@ module Registrar
     end
 
     def self.add_omniauth_strategy(strategy)
-      require "omniauth-#{strategy}"
+      filename = "omniauth-#{strategy.gsub('_','-')}"
+      provider_name = strategy.gsub('-','_')
+
+      require filename
+
       config.middleware.use ::OmniAuth::Builder do
-        provider strategy
+        provider provider_name
       end
     end
 
