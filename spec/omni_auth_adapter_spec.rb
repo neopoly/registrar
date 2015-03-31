@@ -12,6 +12,7 @@ class OmniAuthAuthBuilderSpec < Spec
   def assert_normalizes_auth(env)
     assert_normalizes_provider(env)
     assert_normalizes_profile(env)
+    assert_adds_trace(env)
   end
 
   def assert_normalizes_provider(env)
@@ -37,6 +38,15 @@ class OmniAuthAuthBuilderSpec < Spec
       }, env['registrar.auth']['profile'])
   end
 
+  def assert_adds_trace(env)
+    assert_equal(
+      {
+        "ip" => "127.0.0.2",
+        "user_agent" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.91 Safari/537.36",
+        "timestamp" => "1427789796"
+      }, env['registrar.auth']['trace'])
+  end
+
   def env
     last_request.env
   end
@@ -51,6 +61,36 @@ class OmniAuthAuthBuilderSpec < Spec
 
   def build_app
     builder.to_app
+  end
+
+  class TraceStub
+    def initialize(app)
+      @app = app
+    end
+
+    def call(env)
+      env['HTTP_USER_AGENT'] = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.91 Safari/537.36"
+      env['REMOTE_ADDR'] = "127.0.0.2"
+      @app.call(env)
+    end
+  end
+
+  class TimeStub
+    def now
+      Time.at(1427789796)
+    end
+  end
+
+  def env
+    last_request.env
+  end
+
+  def response
+    last_response
+  end
+
+  def app
+    @app ||= build_app
   end
 
   class OmniAuthFacebookStub
@@ -84,9 +124,10 @@ class OmniAuthAuthBuilderSpec < Spec
 
   def builder
     Rack::Builder.new do
+      use TraceStub
       use OmniAuthFacebookStub
 
-      use Registrar::AuthBuilder::OmniAuth
+      use Registrar::AuthBuilder::OmniAuth, TimeStub.new
 
       app = Proc.new do |env|
         ['200', {'Content-Type' => 'text/html'}, ['A barebones rack app.']]

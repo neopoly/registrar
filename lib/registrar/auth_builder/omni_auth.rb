@@ -1,8 +1,9 @@
 module Registrar
   module AuthBuilder
     class OmniAuth
-      def initialize(app)
+      def initialize(app, time = Time)
         @app = app
+        @time = time
       end
 
       def call(env)
@@ -13,30 +14,30 @@ module Registrar
       private
 
       def try_to_normalize_auth(env)
-        if auth = env['omniauth.auth']
-          env['registrar.auth'] = AuthNormalizer.normalized(auth)
+        if env['omniauth.auth']
+          env['registrar.auth'] = AuthNormalizer.normalized(env, @time)
         end
       end
 
       class AuthNormalizer
-        def self.normalized(auth)
-          new(auth).normalize
+        def self.normalized(env, time)
+          new(env, time).normalize
         end
 
-        def initialize(auth)
-          @auth = auth
+        def initialize(env, time)
+          @env = env
+          @time = time
         end
 
         def normalize
           normalized = {}
           normalized['provider'] = normalize_provider
           normalized['profile'] = normalize_profile
+          normalized['trace'] = add_trace
           normalized
         end
 
         private
-
-        attr_reader :auth
 
         def normalize_provider
           {
@@ -60,6 +61,38 @@ module Registrar
 
         def normalize_profile
           auth['info'].to_hash
+        end
+
+        def add_trace
+          {
+            'ip' => ip,
+            'user_agent' => user_agent,
+            'timestamp' => now
+          }
+        end
+
+        def ip
+          request.ip
+        end
+
+        def user_agent
+          request.user_agent
+        end
+
+        def now
+          @time.now.to_i.to_s
+        end
+
+        def request
+          @request ||= Rack::Request.new(env)
+        end
+
+        def auth
+          @auth ||= env['omniauth.auth']
+        end
+
+        def env
+          @env
         end
       end
     end
