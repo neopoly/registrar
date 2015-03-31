@@ -20,7 +20,7 @@ class OmniAuthAuthBuilderSpec < Spec
       {
         'name' => 'facebook',
         'uid' => '100000100277322',
-        'access_token' => 'CAACEdEose0cBAGxad8Y14t3tu3kMlA3SgnxZBfZCQcSyb9hnn1kNZCpBDzZBIpNNpYSsJTFDs4Ar4ZBZBoMRRAzzFJGhPW4mtM1Rmm62BsQiZCkpJpG1pAC8tslbD3s3BiSYEGdjhOZBt7QVHZB1Sea14ojiZAOZBhFWi1BZBfIGgRI3El6FmEYMKPQ2XgJR0ottKdTQBR1ia2NuZABxpsAMYY8Sb'
+        'access_token' => 'CAACEdEose0cBAJN79Dw0mRoZCGz6ZBBq8VrIkSjh5zQG5fWC156X1uhEUUcjk5bOTXfeeAPDYsFLN48WSpZA73q9D4BmQkD73PYDPYKkjhLH90SPSxctWAZBZB50DNh8TAgxZAJ4JmpEbRtpuex3ovEMGoB9tsQlmDQu1ZAj5Qy2WDSaB88nxLcuaClZAXk2ZCqcuLLjO5kiZAZCyYCET9FCyMlmfzh1HhabapyGSm5DQrDqGN8ZCpm7oUkmfpz3prmShOcZD'
       }, env['registrar.auth']['provider'])
   end
 
@@ -28,13 +28,9 @@ class OmniAuthAuthBuilderSpec < Spec
     assert_equal(
       {
         "name" => "Jan Ow",
-        "first_name" => "Jan",
-        "last_name" => "Ow",
-        "image" => "http://graph.facebook.com/100000100277322/picture",
-        "urls" => {
-          "Facebook" => "http://www.facebook.com/100000100277322"
-        },
-        "verified" => true
+        "email" => "janowiesniak@gmx.de",
+        "location" => "Bochum, Germany",
+        "image" => "http://graph.facebook.com/100000100277322/picture"
       }, env['registrar.auth']['profile'])
   end
 

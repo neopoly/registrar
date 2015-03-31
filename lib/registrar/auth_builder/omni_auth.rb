@@ -15,13 +15,13 @@ module Registrar
 
       def try_to_normalize_auth(env)
         if env['omniauth.auth']
-          env['registrar.auth'] = AuthNormalizer.normalized(env, @time)
+          env['registrar.auth'] = Builder.build(env, @time)
         end
       end
 
-      class AuthNormalizer
-        def self.normalized(env, time)
-          new(env, time).normalize
+      class Builder
+        def self.build(env, time)
+          new(env, time).build
         end
 
         def initialize(env, time)
@@ -29,21 +29,21 @@ module Registrar
           @time = time
         end
 
-        def normalize
-          normalized = {}
-          normalized['provider'] = normalize_provider
-          normalized['profile'] = normalize_profile
-          normalized['trace'] = add_trace
-          normalized
+        def build
+          Hash.new.tap do |schema|
+            schema['provider'] = provider
+            schema['profile'] = profile
+            schema['trace'] = trace
+          end
         end
 
         private
 
-        def normalize_provider
+        def provider
           {
             'name' => provider_name,
             'uid' => provider_uid,
-            'access_token' => access_token 
+            'access_token' => provider_access_token
           }
         end
 
@@ -55,15 +55,40 @@ module Registrar
           auth['uid']
         end
 
-        def access_token
+        def provider_access_token
           auth['credentials']['token']
         end
 
-        def normalize_profile
+        def profile
+          {
+            'name' => profile_name,
+            'email' => profile_email,
+            'location' => profile_location,
+            'image' => profile_image
+          }
+        end
+
+        def profile_name
+          info['name']
+        end
+
+        def profile_email
+          info['email']
+        end
+
+        def profile_location
+          info['location']
+        end
+
+        def profile_image
+          info['image']
+        end
+
+        def info
           auth['info'].to_hash
         end
 
-        def add_trace
+        def trace
           {
             'ip' => ip,
             'user_agent' => user_agent,
@@ -72,19 +97,15 @@ module Registrar
         end
 
         def ip
-          request.ip
+          env['REMOTE_ADDR']
         end
 
         def user_agent
-          request.user_agent
+          env['HTTP_USER_AGENT']
         end
 
         def now
           @time.now.to_i.to_s
-        end
-
-        def request
-          @request ||= Rack::Request.new(env)
         end
 
         def auth
