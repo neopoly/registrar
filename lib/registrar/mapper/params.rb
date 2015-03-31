@@ -23,23 +23,27 @@ module Registrar
         end
 
         def build_registrar_params
-          @mapping.each do |from, to|
-            namespace_from, attr_from = from.split('#')
-            value = request.params[namespace_from]
+          begin
+            @mapping.each do |from, to|
+              namespace_from, attr_from = from.split('#')
+              value = request.params[namespace_from]
 
-            if value.class != String && attr_from
-              value = request.params[namespace_from][attr_from]
-            end
+              if value.class != String && attr_from
+                value = request.params[namespace_from][attr_from]
+              end
 
-            namespace_to, attr_to = to.split('#')
+              namespace_to, attr_to = to.split('#')
 
-            if namespace_to
-              if attr_to
-                params[namespace_to][attr_to] = value
-              else
-                params[namespace_to] = value
+              if namespace_to
+                if attr_to
+                  params[namespace_to][attr_to] = value
+                else
+                  params[namespace_to] = value
+                end
               end
             end
+          rescue NoMethodError
+            return
           end
         end
 
