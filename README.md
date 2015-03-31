@@ -222,6 +222,7 @@ If you are using `Rails` you should probably check out [registrar-rails](https:/
 
 ## Contributing
 
+0. Check out the [Wiki](https://github.com/JanOwiesniak/registrar/wiki)
 1. Fork it ( https://github.com/JanOwiesniak/registrar/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
