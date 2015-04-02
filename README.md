@@ -22,13 +22,13 @@ You can think of Registrar as a thin wrapper around your sign up / sign in proce
 
 Registrar already has [build in support](https://github.com/JanOwiesniak/registrar/blob/master/lib/registrar/auth_builder/omni_auth.rb) for the [OmniAuth Auth Hash Schema](https://github.com/intridea/omniauth/wiki/Auth-Hash-Schema).
 
-If you want to use a different authentication mechanisms feel free to implement your own [AuthBuilder](https://github.com/JanOwiesniak/registrar/wiki/AuthBuilder).
+If you want to use a different authentication mechanism feel free to implement your own [AuthBuilder](https://github.com/JanOwiesniak/registrar/wiki/AuthBuilder).
 
 ## Getting Started
 
 Let us start with a short example.
 
-I'm using an [fork](https://github.com/JanOwiesniak/omniauth-facebook-access-token) (see here why i use a [fork](https://github.com/JanOwiesniak/omniauth-facebook-access-token/commit/6df0d75d5b9a3c866eea63d2495da0376091cbbe)) of the [omniauth-facebook-access-token](https://github.com/JanOwiesniak/omniauth-facebook-access-token) OmniAuth strategy to authenticate my user.
+I'm using a [fork](https://github.com/JanOwiesniak/omniauth-facebook-access-token) (see here why i use a [fork](https://github.com/JanOwiesniak/omniauth-facebook-access-token/commit/6df0d75d5b9a3c866eea63d2495da0376091cbbe)) of the [omniauth-facebook-access-token](https://github.com/JanOwiesniak/omniauth-facebook-access-token) OmniAuth strategy to authenticate my user.
 
 Add `registrar` and the authenticaton mechanism you want to use to your `Gemfile`
 
@@ -75,11 +75,12 @@ end
 run app
 ```
 
-Go to the [Facebook Graph API Explorer](https://developers.facebook.com/tools/explorer/), generate a access token and copy it to your clipboard.
+Go to the [Facebook Graph API Explorer](https://developers.facebook.com/tools/explorer/), generate an access token and copy it to your clipboard.
 
-Start the application, visit localhost:port/auth/facebook_access_token and paste the access token from your clipboard. Click the submit button.
+Start the application, visit localhost:port/auth/facebook_access_token and paste the access token from your clipboard.
+Click the submit button.
 
-If you inspect your env you should find the schema OmniAuth builds for you `env['omniauth.auth']`
+`env['omniauth.auth']` returns the schema OmniAuth builds for you 
 
 ```bash
 !ruby/hash:OmniAuth::AuthHash
@@ -116,7 +117,7 @@ If you inspect your env you should find the schema OmniAuth builds for you `env[
       verified: true
 ```
 
-Besides that you should also find the schema registrar, in this case Registrar::AuthBuilder::OmniAuth, builds for you `env['registrar.auth']`
+`env['registrar.auth']` returns the schema which registrar builds (in this case Registrar::AuthBuilder::OmniAuth)
 
 ```bash
   provider:
@@ -135,9 +136,9 @@ Besides that you should also find the schema registrar, in this case Registrar::
     timestamp: '1427800292'
 ```
 
-Nothing special for now. The AuthBuilder just transform the Hash into a different structure for now.
+Currently, the AuthBuilder just transforms the Hash into a different structure.
 
-In the general case you want to do something with the authenticated user (e.g. sign up or sign in), this is where the profile builder come into play.
+To do something with the authenticated user (e.g. sign up or sign in), use the profile builder.
 
 Open up you Middewarestack again.
 
@@ -163,7 +164,7 @@ end
 run app
 ```
 
-In this case i passed the Registrar Schema to a application related service called ProfileRegister which returned me a application specific Profile.
+In this case I passed the Registrar Schema to an application related service called ProfileRegister which returned me a application specific Profile.
 
 This profile is stored in `env['registrar.profile']`
 
@@ -218,7 +219,7 @@ def logged_out?
 end
 ```
 
-If you are using `Rails` you should probably check out [registrar-rails](https://github.com/JanOwiesniak/registrar-rails) which gives you a small interface to configure your middleware as well as some helper methods like i suggest above.
+If you are using `Rails` you should probably check out [registrar-rails](https://github.com/JanOwiesniak/registrar-rails) which gives you a small interface to configure your middleware as well as some helper methods as suggested above.
 
 ## Contributing
 
