@@ -15,11 +15,20 @@ module Registrar
     private
 
     def self.convert_params_to_registrar_schema
-      config.middleware.use Registrar::Mapper::Params, config.attributes
+      if config.middleware.respond_to?(:insert_before)
+        config.middleware.insert_before ActionDispatch::Cookies,
+          Registrar::Mapper::Params, config.attributes
+      else
+        config.middleware.use Registrar::Mapper::Params, config.attributes
+      end
     end
 
     def self.convert_registrar_schema_to_omniauth_schema
-      config.middleware.use Registrar::Mapper::OmniAuth
+      if config.middleware.respond_to?(:insert_before)
+        config.middleware.insert_before ActionDispatch::Cookies, Registrar::Mapper::OmniAuth
+      else
+        config.middleware.use Registrar::Mapper::OmniAuth
+      end
     end
 
     def self.add_omniauth_strategies
@@ -40,17 +49,31 @@ module Registrar
 
       require filename
 
-      config.middleware.use ::OmniAuth::Builder do
-        provider provider_name
+      if config.middleware.respond_to?(:insert_before)
+        config.middleware.insert_before ActionDispatch::Cookies, ::OmniAuth::Builder do
+          provider provider_name
+        end
+      else
+        config.middleware.use ::OmniAuth::Builder do
+          provider provider_name
+        end
       end
     end
 
     def self.convert_omniauth_schema_to_registrar_schema
-      config.middleware.use Registrar::AuthBuilder::OmniAuth
+      if config.middleware.respond_to?(:insert_before)
+        config.middleware.insert_before ActionDispatch::Cookies, Registrar::AuthBuilder::OmniAuth
+      else
+        config.middleware.use Registrar::AuthBuilder::OmniAuth
+      end
     end
 
     def self.add_registrar_handler
-      config.middleware.use Registrar::ProfileBuilder, config.handler
+      if config.middleware.respond_to?(:insert_before)
+        config.middleware.insert_before ActionDispatch::Cookies, Registrar::ProfileBuilder, config.handler
+      else
+        config.middleware.use Registrar::ProfileBuilder, config.handler
+      end
     end
 
     def self.config
