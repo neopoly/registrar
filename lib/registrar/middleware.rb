@@ -15,20 +15,11 @@ module Registrar
     private
 
     def self.convert_params_to_registrar_schema
-      if config.middleware.respond_to?(:insert_before)
-        config.middleware.insert_before ActionDispatch::Cookies,
-          Registrar::Mapper::Params, config.attributes
-      else
-        config.middleware.use Registrar::Mapper::Params, config.attributes
-      end
+      config.middleware.use Registrar::Mapper::Params, config.attributes
     end
 
     def self.convert_registrar_schema_to_omniauth_schema
-      if config.middleware.respond_to?(:insert_before)
-        config.middleware.insert_before ActionDispatch::Cookies, Registrar::Mapper::OmniAuth
-      else
-        config.middleware.use Registrar::Mapper::OmniAuth
-      end
+      config.middleware.use Registrar::Mapper::OmniAuth
     end
 
     def self.add_omniauth_strategies
@@ -49,31 +40,17 @@ module Registrar
 
       require filename
 
-      if config.middleware.respond_to?(:insert_before)
-        config.middleware.insert_before ActionDispatch::Cookies, ::OmniAuth::Builder do
-          provider provider_name
-        end
-      else
-        config.middleware.use ::OmniAuth::Builder do
-          provider provider_name
-        end
+      config.middleware.use ::OmniAuth::Builder do
+        provider provider_name
       end
     end
 
     def self.convert_omniauth_schema_to_registrar_schema
-      if config.middleware.respond_to?(:insert_before)
-        config.middleware.insert_before ActionDispatch::Cookies, Registrar::AuthBuilder::OmniAuth
-      else
-        config.middleware.use Registrar::AuthBuilder::OmniAuth
-      end
+      config.middleware.use Registrar::AuthBuilder::OmniAuth
     end
 
     def self.add_registrar_handler
-      if config.middleware.respond_to?(:insert_before)
-        config.middleware.insert_before ActionDispatch::Cookies, Registrar::ProfileBuilder, config.handler
-      else
-        config.middleware.use Registrar::ProfileBuilder, config.handler
-      end
+      config.middleware.use Registrar::ProfileBuilder, config.handler
     end
 
     def self.config
