@@ -12,6 +12,24 @@ class OmniAuthAuthBuilderSpec < Spec
     assert_normalizes_auth env
   end
 
+  it 'prefers HTTP_X_REMOTE_ADDR over REMOTE_ADDR' do
+    passed_env['REMOTE_ADDR'] = '127.0.0.2'
+    passed_env['HTTP_X_REMOTE_ADDR'] = '127.0.0.3'
+
+    get '/', nil, passed_env
+
+    assert_equal passed_env['HTTP_X_REMOTE_ADDR'], traced['ip']
+  end
+
+  it 'prefers HTTP_CLIENT_IP over HTTP_X_REMOTE_ADDR' do
+    passed_env['HTTP_X_REMOTE_ADDR'] = '127.0.0.3'
+    passed_env['HTTP_CLIENT_IP'] = '127.0.0.4'
+
+    get '/', nil, passed_env
+
+    assert_equal passed_env['HTTP_CLIENT_IP'], traced['ip']
+  end
+
   private
 
   def assert_normalizes_auth(env)
@@ -62,6 +80,10 @@ class OmniAuthAuthBuilderSpec < Spec
 
   def build_app
     builder.to_app
+  end
+
+  def traced
+    env['registrar.auth']['trace']
   end
 
   class TraceStub
