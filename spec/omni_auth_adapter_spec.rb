@@ -77,18 +77,6 @@ class OmniAuthAuthBuilderSpec < Spec
     end
   end
 
-  def env
-    last_request.env
-  end
-
-  def response
-    last_response
-  end
-
-  def app
-    @app ||= build_app
-  end
-
   class OmniAuthFacebookStub
     def initialize(app)
       @app = app
