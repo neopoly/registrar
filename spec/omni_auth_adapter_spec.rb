@@ -2,8 +2,13 @@ require 'spec_helper'
 require 'omniauth'
 
 class OmniAuthAuthBuilderSpec < Spec
+  let(:passed_env) { Hash.new }
+
   it 'normalizes OmniAuth Auth Hash Schema 1.0 and later' do
-    get '/'
+    passed_env['HTTP_USER_AGENT'] = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.91 Safari/537.36"
+    passed_env['REMOTE_ADDR'] = "127.0.0.2"
+
+    get '/', nil, passed_env
     assert_normalizes_auth env
   end
 
@@ -65,8 +70,6 @@ class OmniAuthAuthBuilderSpec < Spec
     end
 
     def call(env)
-      env['HTTP_USER_AGENT'] = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.91 Safari/537.36"
-      env['REMOTE_ADDR'] = "127.0.0.2"
       @app.call(env)
     end
   end
