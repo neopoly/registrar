@@ -97,7 +97,14 @@ module Registrar
         end
 
         def ip
-          env['HTTP_CLIENT_IP'] || env['HTTP_X_REMOTE_ADDR'] || env['REMOTE_ADDR']
+          action_dispatch_remote_ip || env['HTTP_CLIENT_IP'] ||
+            env['HTTP_X_REMOTE_ADDR'] || env['REMOTE_ADDR']
+        end
+
+        def action_dispatch_remote_ip
+          if remote_ip = env['action_dispatch.remote_ip']
+            remote_ip.to_s
+          end
         end
 
         def user_agent

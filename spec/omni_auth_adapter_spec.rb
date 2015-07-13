@@ -30,6 +30,16 @@ class OmniAuthAuthBuilderSpec < Spec
     assert_equal passed_env['HTTP_CLIENT_IP'], traced['ip']
   end
 
+  it 'prefers action_dispatch.remote_ip in env over HTTP_CLIENT_IP' do
+    remote_ip = RemoteIpFake.new([127, 0, 0, 5])
+    passed_env['action_dispatch.remote_ip'] = remote_ip
+    passed_env['HTTP_CLIENT_IP'] = '127.0.0.4'
+
+    get '/', nil, passed_env
+
+    assert_equal remote_ip.to_s, traced['ip']
+  end
+
   private
 
   def assert_normalizes_auth(env)
@@ -128,6 +138,12 @@ class OmniAuthAuthBuilderSpec < Spec
 
     def current_path
       File.expand_path(File.dirname(__FILE__))
+    end
+  end
+
+  class RemoteIpFake < Struct.new(:ip)
+    def to_s
+      ip.join('.')
     end
   end
 
