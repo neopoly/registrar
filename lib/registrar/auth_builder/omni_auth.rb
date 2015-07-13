@@ -97,7 +97,7 @@ module Registrar
         end
 
         def ip
-          env['REMOTE_ADDR']
+          env['HTTP_CLIENT_IP'] || env['HTTP_X_REMOTE_ADDR'] || env['REMOTE_ADDR']
         end
 
         def user_agent
