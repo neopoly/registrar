@@ -31,13 +31,13 @@ class OmniAuthAuthBuilderSpec < Spec
   end
 
   it 'prefers action_dispatch.remote_ip in env over HTTP_CLIENT_IP' do
-    remote_ip = RemoteIpFake.new([127, 0, 0, 5])
+    remote_ip = RemoteIpFake.new("127.0.0.5")
     passed_env['action_dispatch.remote_ip'] = remote_ip
     passed_env['HTTP_CLIENT_IP'] = '127.0.0.4'
 
     get '/', nil, passed_env
 
-    assert_equal remote_ip.to_s, traced['ip']
+    assert_equal "127.0.0.5", traced['ip']
   end
 
   private
@@ -133,7 +133,7 @@ class OmniAuthAuthBuilderSpec < Spec
 
   class RemoteIpFake < Struct.new(:ip)
     def to_s
-      ip.join('.')
+      ip
     end
   end
 
