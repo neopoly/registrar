@@ -96,16 +96,6 @@ class OmniAuthAuthBuilderSpec < Spec
     env['registrar.auth']['trace']
   end
 
-  class TraceStub
-    def initialize(app)
-      @app = app
-    end
-
-    def call(env)
-      @app.call(env)
-    end
-  end
-
   class TimeStub
     def now
       Time.at(1427789796)
@@ -149,7 +139,6 @@ class OmniAuthAuthBuilderSpec < Spec
 
   def builder
     Rack::Builder.new do
-      use TraceStub
       use OmniAuthFacebookStub
 
       use Registrar::AuthBuilder::OmniAuth, TimeStub.new
