@@ -92,7 +92,9 @@ module Registrar
           {
             'ip' => ip,
             'user_agent' => user_agent,
-            'timestamp' => now
+            'timestamp' => now,
+            'platform' => platform,
+            'locale' => locale
           }
         end
 
@@ -113,6 +115,30 @@ module Registrar
 
         def now
           @time.now.to_i.to_s
+        end
+
+        def platform
+          mobile_user_agent? ? 'mobile' : 'desktop'
+        end
+
+        def mobile_user_agent?
+          !!mobile_user_agents.match(user_agent)
+        end
+
+        def mobile_user_agents
+          Regexp.new(MOBILE_USER_AGENTS, true)
+        end
+
+        MOBILE_USER_AGENTS =
+          'palm|blackberry|nokia|phone|midp|mobi|symbian|chtml|ericsson|minimo|' \
+          'audiovox|motorola|samsung|telit|upg1|windows ce|ucweb|astel|plucker|' \
+          'x320|x240|j2me|sgh|portable|sprint|docomo|kddi|softbank|android|mmp|' \
+          'pdxgw|netfront|xiino|vodafone|portalmmm|sagem|mot-|sie-|ipod|up\\.b|' \
+          'webos|amoi|novarra|cdm|alcatel|pocket|ipad|iphone|mobileexplorer|' \
+          'mobile|zune|iphone|android|ipod|ipad'
+
+        def locale
+          env['X-Locale']
         end
 
         def auth

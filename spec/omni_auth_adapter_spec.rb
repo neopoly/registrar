@@ -5,8 +5,9 @@ class OmniAuthAuthBuilderSpec < Spec
   let(:passed_env) { Hash.new }
 
   it 'normalizes OmniAuth Auth Hash Schema 1.0 and later' do
-    passed_env['HTTP_USER_AGENT'] = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.91 Safari/537.36"
+    passed_env['HTTP_USER_AGENT'] = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7"
     passed_env['REMOTE_ADDR'] = "127.0.0.2"
+    passed_env['X-Locale'] = 'fr'
 
     get '/', nil, passed_env
     assert_normalizes_auth env
@@ -71,8 +72,10 @@ class OmniAuthAuthBuilderSpec < Spec
     assert_equal(
       {
         "ip" => "127.0.0.2",
-        "user_agent" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.91 Safari/537.36",
-        "timestamp" => "1427789796"
+        "user_agent" => "Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7",
+        "timestamp" => "1427789796",
+        "platform" => "mobile",
+        "locale" => "fr"
       }, env['registrar.auth']['trace'])
   end
 
