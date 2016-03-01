@@ -94,7 +94,8 @@ module Registrar
             'user_agent' => user_agent,
             'timestamp' => now,
             'platform' => platform,
-            'locale' => locale
+            'locale' => locale,
+            'country' => country
           }
         end
 
@@ -139,6 +140,14 @@ module Registrar
 
         def locale
           env['X-Locale']
+        end
+
+        require 'geoip'
+        GEOIP_DATA = File.expand_path("../../../../vendor/GeoIP.dat", __FILE__)
+        GEOIP = GeoIP.new(GEOIP_DATA, :preload => true)
+
+        def country
+          GEOIP.country(ip).country_code2
         end
 
         def auth
