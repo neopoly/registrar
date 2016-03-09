@@ -64,7 +64,9 @@ class OmniAuthAuthBuilderSpec < Spec
         "name" => "Jan Ow",
         "email" => "janowiesniak@gmx.de",
         "location" => "Bochum, Germany",
-        "image" => "http://graph.facebook.com/100000100277322/picture"
+        "image" => "http://graph.facebook.com/100000100277322/picture",
+        "terms_accepted" => false,
+        "opt_in" => false
       }, env['registrar.auth']['profile'])
   end
 

@@ -64,7 +64,9 @@ module Registrar
             'name' => profile_name,
             'email' => profile_email,
             'location' => profile_location,
-            'image' => profile_image
+            'image' => profile_image,
+            'terms_accepted' => terms_accepted,
+            'opt_in' => opt_in
           }
         end
 
@@ -82,6 +84,18 @@ module Registrar
 
         def profile_image
           info['image']
+        end
+
+        def terms_accepted
+          extra['terms_accepted'] || false
+        end
+
+        def opt_in
+          extra['opt_in'] || false
+        end
+
+        def extra
+          auth['extra'].to_hash
         end
 
         def info
