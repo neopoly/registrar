@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'omniauth'
 
-class OmniAuthAuthBuilderSpec < Spec
+class ConvertOmniAuthHashToRegistrarHashSpec < Spec
   let(:passed_env) { Hash.new }
 
   it 'normalizes OmniAuth Auth Hash Schema 1.0 and later' do
@@ -146,8 +146,7 @@ class OmniAuthAuthBuilderSpec < Spec
   def builder
     Rack::Builder.new do
       use OmniAuthFacebookStub
-
-      use Registrar::AuthBuilder::OmniAuth, TimeStub.new
+      use Registrar::Middleware::ConvertOmniAuthHashToRegistrarHash, TimeStub.new
 
       app = Proc.new do |env|
         ['200', {'Content-Type' => 'text/html'}, ['A barebones rack app.']]

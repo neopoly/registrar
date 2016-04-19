@@ -1,6 +1,6 @@
 module Registrar
-  module AuthBuilder
-    class OmniAuth
+  module Middleware
+    class ConvertOmniAuthHashToRegistrarHash
       def initialize(app, time = Time)
         @app = app
         @time = time
@@ -15,11 +15,11 @@ module Registrar
 
       def try_to_normalize_auth(env)
         if env['omniauth.auth']
-          env['registrar.auth'] = Builder.build(env, @time)
+          env['registrar.auth'] = RegistrarHash.build(env, @time)
         end
       end
 
-      class Builder
+      class RegistrarHash
         def self.build(env, time)
           new(env, time).build
         end
